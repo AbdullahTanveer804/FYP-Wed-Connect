@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IUser extends Document {
-  fullName: string;
+  fullname: string;
   email: string;
   password: string;
   role: "customer" | "vendor" | "admin";
@@ -13,23 +13,23 @@ export interface IUser extends Document {
     zip: string;
   };
   phoneNumber?: string;
-  isAdmin: boolean;
-  isverfied: boolean;
-  savedVendors: string[];
-  verifyToken: string;
-  verifyTokenExpiry: Date;
-  forgotPasswordToken: string;
-  forgotPasswordTokenExpiry: Date;
+  isVerified: boolean;
+  savedVendors?: string[];
+  verifyCode: string;
+  verifyCodeExpiry: Date;
+  forgotPasswordCode?: string;
+  forgotPasswordCodeExpiry?: Date;
   isActive: boolean;
+  status: "active" | "deactivate" | "delete"
 }
 
 const userSchema: Schema<IUser> = new Schema(
   {
-    fullName: {
+    fullname: {
       type: String,
-      required: [true, "Full name is required"],
+      required: [true, "Name is required"],
       trim: true,
-      min: [3, "Full name must be atleast 3 characters"],
+      min: [3, "Full name must be at least 3 characters"],
     },
     email: {
       type: String,
@@ -42,7 +42,8 @@ const userSchema: Schema<IUser> = new Schema(
     password: {
       type: String,
       required: [true, "Password is required"],
-      min: [8, "Password must be atleast 8 characters"],
+      min: [8, "Password must be at least 8 characters"],
+      match: [/^(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/, "Password must be 8+ chars with lowercase, number, and special character"]
     },
     role: {
       type: String,
@@ -50,9 +51,8 @@ const userSchema: Schema<IUser> = new Schema(
       default: "customer",
     },
     profileImage: {
-      typpe: String,
-      default:
-        "https://res.cloudinary.com/dqj8xg3zv/image/upload/v1698231234/2023-10-24T12:47:14.000Z_1.png",
+      type: String,
+      default: "",
     },
     location: {
       city: {
@@ -76,11 +76,7 @@ const userSchema: Schema<IUser> = new Schema(
       type: String,
       trim: true,
     },
-    isAdmin: {
-      type: Boolean,
-      default: false,
-    },
-    isverfied: {
+    isVerified: {
       type: Boolean,
       default: false,
     },
@@ -88,21 +84,23 @@ const userSchema: Schema<IUser> = new Schema(
       type: [String],
       default: [],
     },
-    verifyToken: {
+    verifyCode: {
       type: String,
       default: "",
     },
-    verifyTokenExpiry: Date,
-    forgotPasswordToken: {
+    verifyCodeExpiry: Date,
+    forgotPasswordCode: {
       type: String,
       default: "",
     },
-    forgotPasswordTokenExpiry: Date,
+    forgotPasswordCodeExpiry: Date,
   },
   { timestamps: true }
 );
 
 
-const User = mongoose.models.users as mongoose.Model<IUser> || mongoose.model<IUser>("users", userSchema)
+const User =
+  (mongoose.models.users as mongoose.Model<IUser>) ||
+  mongoose.model<IUser>("users", userSchema);
 
-export default User
+export default User;

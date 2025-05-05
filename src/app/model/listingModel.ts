@@ -3,13 +3,14 @@ import mongoose, { Schema, Document } from "mongoose";
 export interface IVendor extends Document {
   userId: mongoose.Types.ObjectId;
   businessName: string;
-  category: string;
+  categoryId: mongoose.Types.ObjectId;
   description: string;
-  services: Array<{
+  packages: Array<{
     name: string;
     description: string;
     price: number;
     duration: number;
+    capacity?: number;
   }>;
   coverImage: string;
   gallery: string[];
@@ -18,7 +19,7 @@ export interface IVendor extends Document {
     city: string;
     state: string;
     country: string;
-    cordinates: {
+    coordinates: {
       lat: number;
       lng: number;
     };
@@ -26,7 +27,7 @@ export interface IVendor extends Document {
   pricing: {
     minPrice: number;
     maxPrice: number;
-    pricingDetails: string;
+    pricingDetails?: string;
   };
   contactInfo: {
     email: string;
@@ -39,16 +40,17 @@ export interface IVendor extends Document {
     twitter?: String;
   };
   reviews: Array<{
-    userID: mongoose.Types.ObjectId;
+    userId: mongoose.Types.ObjectId;
     rating: number;
     comment: String;
     date: Date;
   }>;
-  rating: number;
+  totalRating: number;
   viewCount: number;
   featured: Boolean;
   isVerifiedVendor: Boolean;
   isActive: Boolean;
+  status: "active" | "deactivate" | "delete";
 }
 
 const vendorSchema: Schema<IVendor> = new Schema(
@@ -63,16 +65,16 @@ const vendorSchema: Schema<IVendor> = new Schema(
       required: [true, "Please provide a business name"],
       trim: true,
     },
-    category: {
-      type: String,
-      required: [true, "Please provide a description"],
-      trim: true,
+    categoryId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "Category",
     },
     description: {
       type: String,
       required: true,
     },
-    services: [
+    packages: [
       {
         name: {
           type: String,
@@ -84,11 +86,14 @@ const vendorSchema: Schema<IVendor> = new Schema(
         },
         price: {
           type: Number,
-          requred: true,
+          required: true,
         },
         duration: {
           type: Number,
           required: true,
+        },
+        capacity: {
+          type: Number,
         },
       },
     ],
@@ -111,7 +116,7 @@ const vendorSchema: Schema<IVendor> = new Schema(
         type: String,
         required: true,
       },
-      cordinates: {
+      coordinates: {
         lat: Number,
         lng: Number,
       },
@@ -168,14 +173,12 @@ const vendorSchema: Schema<IVendor> = new Schema(
         },
       },
     ],
-    viewCount: {
+    totalRating: {
       type: Number,
       default: 0,
     },
-    rating: {
+    viewCount: {
       type: Number,
-      min: 1,
-      max: 5,
       default: 0,
     },
     featured: {
@@ -190,12 +193,17 @@ const vendorSchema: Schema<IVendor> = new Schema(
       type: Boolean,
       default: false,
     },
+    status: {
+      type: String,
+      enum: ["active", "deactivate", "delete"],
+      default: "active",
+    },
   },
   { timestamps: true }
 );
 
+const Vendor =
+  (mongoose.models.vendors as mongoose.Model<IVendor>) ||
+  mongoose.model<IVendor>("vendors", vendorSchema);
 
-const Vendor = mongoose.models.vendors as mongoose.Model<IVendor> ||
- mongoose.model<IVendor>('vendors', vendorSchema)
-
-export default Vendor
+export default Vendor;
