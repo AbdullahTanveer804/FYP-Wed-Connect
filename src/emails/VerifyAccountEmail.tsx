@@ -11,12 +11,13 @@ import {
   } from "@react-email/components";
   
   interface VerifyEmailProps {
-    email: string
-    verifyCode: string
+    email: string;
+    verifyCode: string;
+    expiryMinutes: number;
   }
   
   export default function verifyAccountEmail({
-     verifyCode, email
+     verifyCode, email, expiryMinutes
   }: VerifyEmailProps) {
     return (
       <Html>
@@ -41,23 +42,20 @@ import {
   
               <Hr className="my-4" />
   
-              {/* Message */}
-              <Text className="text-sm mb-4">
-                GhostNote received a request to use <strong>{email}</strong>{" "}
-                as a sign up email for GostNote Account.
+              {/* Message */}              <Text className="text-sm mb-4">
+                Thanks for signing up with WedConnect! We need to verify that <strong>{email}</strong>{" "}
+                is your email address.
               </Text>
-  
+
               <Text className="text-sm mb-4">
-                Use this code to finish setting up this email:
+                Please use the verification code below to complete your registration. For security reasons, this code will expire in {expiryMinutes} minutes:
               </Text>
   
               {/* Code */}
               <Text className="text-3xl font-bold tracking-widest text-center my-6">
                 {verifyCode}
-              </Text>
-  
-              <Text className="text-sm mb-2">
-                This code will expire in <strong>1 hours</strong>.
+              </Text>              <Text className="text-sm mb-2">
+                This code will expire in <strong>{expiryMinutes} minute{expiryMinutes > 1 ? 's' : ''}</strong>.
               </Text>
   
               <Text className="text-sm text-gray-600">

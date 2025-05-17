@@ -1,6 +1,7 @@
 import User from "@/app/model/userModel";
 import { ERROR_MESSAGES } from "@/constants";
-import { sendResetPasswordEmail } from "@/helpers/sendResetPasswordEmail";
+import { generateVerificationCode, generateExpiryTime } from "@/helpers/authUtils";
+import { sendResetPasswordEmail } from "@/helpers/sendEmailHelpers/sendResetPasswordEmail";
 import connectDB from "@/lib/db/connectDB";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -31,15 +32,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Generate reset code
-    const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
-    const resetCodeExpiry = new Date();
-    resetCodeExpiry.setHours(resetCodeExpiry.getHours() + 1);
+    // Generate reset code and expiry time (1 minute)
+    const resetCode = generateVerificationCode();
+    const resetCodeExpiry = generateExpiryTime(1);
 
     // Save reset code to user
     user.forgotPasswordCode = resetCode;
     user.forgotPasswordCodeExpiry = resetCodeExpiry;
     await user.save();
+    console.log(resetCode)
 
     // Send reset email
     const emailResponse = await sendResetPasswordEmail(email, resetCode);

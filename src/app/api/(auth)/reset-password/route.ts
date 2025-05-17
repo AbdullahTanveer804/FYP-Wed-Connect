@@ -1,8 +1,8 @@
 import User from "@/app/model/userModel";
 import { ERROR_MESSAGES } from "@/constants";
+import { hashPassword, isCodeExpired, checkVerifyCode } from "@/helpers/authUtils";
 import connectDB from "@/lib/db/connectDB";
 import { NextRequest, NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
 
 export async function POST(request: NextRequest) {
   try {
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify reset code
-    if (user.forgotPasswordCode !== resetCode) {
+    if (!checkVerifyCode(resetCode, user.forgotPasswordCode as string)) {
       return NextResponse.json(
         {
           success: false,
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if code is expired
-    if (!user.forgotPasswordCodeExpiry || user.forgotPasswordCodeExpiry < new Date()) {
+    if (isCodeExpired(user.forgotPasswordCodeExpiry as Date)) {
       return NextResponse.json(
         {
           success: false,
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Update password
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const hashedPassword = await hashPassword(newPassword);
     user.password = hashedPassword;
     user.forgotPasswordCode = "";
     await user.save();

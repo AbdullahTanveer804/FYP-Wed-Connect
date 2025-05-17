@@ -11,14 +11,16 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // If logged in and trying to access auth routes
-  if (
-    token &&
-    (url.pathname.startsWith("/login") ||
+  // If logged in and trying to access auth routes or public routes
+  if (token) {
+    // Check if trying to access auth routes or public paths
+    if (
+      url.pathname.startsWith("/login") ||
       url.pathname.startsWith("/signup") ||
-      url.pathname.startsWith("/verify"))
-  ) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+      url.pathname.startsWith("/verify")
+    ) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
   }
 
   // Otherwise allow
@@ -26,5 +28,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/sign-in", "/sign-up", "/dashboard/:path*", "/verify/:path*"],
+  matcher: ["/", "/login", "/signup", "/dashboard/:path*", "/verify/:path*"],
 };

@@ -1,15 +1,23 @@
-import Footer from '@/components/Footer'
-import Navbar from '@/components/Navbar'
+import { AIRecommendation } from '@/components/landing/AIRecommendation'
+import { BecomeVendor } from '@/components/landing/BecomeVendor'
+import { HeroSection } from '@/components/landing/HeroSection'
+import { Testimonials } from '@/components/landing/Testimonials'
+import { TopVendors } from '@/components/landing/TopVendors'
+import { VendorCategories } from '@/components/landing/VendorCategories'
+import { NextPage } from 'next'
 import React from 'react'
 
-const page = () => {
+const landingPage : NextPage = () => {
   return (
-    <>
-    <Navbar/>
-    <div className='text-center text-5xl'>HOME</div>
-    <Footer/>
-    </>
+    <div className="flex flex-col min-h-screen">
+    <HeroSection />
+    <VendorCategories />
+    <AIRecommendation />
+    <TopVendors />
+    <Testimonials />
+    <BecomeVendor />
+  </div>
   )
 }
 
-export default page
+export default landingPage

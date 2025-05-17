@@ -1,17 +1,21 @@
 import User from "@/app/model/userModel";
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@/constants";
-import { sendAccountVerificationEmail } from "@/helpers/sendVerificationEmail";
+import { sendAccountVerificationEmail } from "@/helpers/sendEmailHelpers/sendVerificationEmail";
+import {
+  generateVerificationCode,
+  hashPassword,
+  generateExpiryTime,
+} from "@/helpers/authUtils";
 import connectDB from "@/lib/db/connectDB";
-import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
-    const { email, password, fullname } = reqBody;
-    console.log("New Sign up data: ", reqBody);
+    const { email, password, name } = reqBody;
+    console.log("New Sign up data: ", { email, name }); // Don't log password for security
 
-    if (!reqBody) {
+    if (!email || !password || !name) {
       return NextResponse.json(
         {
           success: false,
@@ -22,9 +26,11 @@ export async function POST(request: NextRequest) {
     }
 
     await connectDB();
-
     const existingVerifiedUserByEmail = await User.findOne({ email });
-    const verifyCode = Math.floor(100000 + Math.random() * 900000).toString();
+    const verifyCode = generateVerificationCode();
+    const EXPIRY_MINUTES = 1; // 1 minute expiry time
+    const expiryTime = generateExpiryTime(EXPIRY_MINUTES);
+
     if (existingVerifiedUserByEmail) {
       if (existingVerifiedUserByEmail.isVerified) {
         return NextResponse.json(
@@ -35,34 +41,38 @@ export async function POST(request: NextRequest) {
           { status: 400 }
         );
       } else {
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await hashPassword(password);
+        // Update all required fields
         existingVerifiedUserByEmail.password = hashedPassword;
-        existingVerifiedUserByEmail.fullname = fullname;
+        existingVerifiedUserByEmail.name = name;
         existingVerifiedUserByEmail.verifyCode = verifyCode;
-        existingVerifiedUserByEmail.verifyCodeExpiry = new Date(
-          Date.now() + 3600000
-        );
+        existingVerifiedUserByEmail.verifyCodeExpiry = expiryTime;
 
         await existingVerifiedUserByEmail.save();
       }
     } else {
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const expiryDate = new Date();
-      expiryDate.setHours(expiryDate.getHours() + 1);
-
-      const newUser = new User({
-        fullname,
+      const hashedPassword = await hashPassword(password);
+      const userData = {
+        name,
         email,
         password: hashedPassword,
         isVerified: false,
         verifyCode,
-        verifyCodeExpiry: expiryDate,
+        verifyCodeExpiry: expiryTime,
+      };
+      console.log("Creating new user with data:", {
+        ...userData,
+        password: "[REDACTED]",
       });
-      await newUser.save();
-      console.log("Newly saved user: ", newUser);
+      const newUser = new User(userData);
+      const savedUser = await newUser.save();
+      console.log("Newly saved user ID: ", savedUser._id);
     }
-
-    const emailResponse = await sendAccountVerificationEmail(email, verifyCode);
+    const emailResponse = await sendAccountVerificationEmail(
+      email,
+      verifyCode,
+      EXPIRY_MINUTES
+    );
     if (!emailResponse.success) {
       return NextResponse.json(
         {
@@ -80,7 +90,10 @@ export async function POST(request: NextRequest) {
       },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error: any) {
+    console.error("Signup error details:", {
+      message: error?.message,
+    });
     return NextResponse.json(
       {
         success: false,

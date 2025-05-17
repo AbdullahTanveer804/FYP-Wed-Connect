@@ -1,31 +1,31 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IUser extends Document {
-  fullname: string;
+  name: string;
   email: string;
   password: string;
-  role: "customer" | "vendor" | "admin";
-  profileImage?: string;
+  role: "CUSTOMER" | "VENDOR" | "ADMIN";
+  image?: string;
   location?: {
     city: string;
     state: string;
     country: string;
     zip: string;
   };
-  phoneNumber?: string;
+  phone?: string;
   isVerified: boolean;
   savedVendors?: string[];
+  stripeCustomerId?: string;
   verifyCode: string;
   verifyCodeExpiry: Date;
   forgotPasswordCode?: string;
   forgotPasswordCodeExpiry?: Date;
-  isActive: boolean;
-  status: "active" | "deactivate" | "delete"
+  status: "ACTIVE" | "DISABLE" | "DELETE";
 }
 
 const userSchema: Schema<IUser> = new Schema(
   {
-    fullname: {
+    name: {
       type: String,
       required: [true, "Name is required"],
       trim: true,
@@ -43,14 +43,17 @@ const userSchema: Schema<IUser> = new Schema(
       type: String,
       required: [true, "Password is required"],
       min: [8, "Password must be at least 8 characters"],
-      match: [/^(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/, "Password must be 8+ chars with lowercase, number, and special character"]
+      match: [
+        /^(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/,
+        "Password must be 8+ chars with lowercase, number, and special character",
+      ],
     },
     role: {
       type: String,
-      enum: ["customer", "vendor", "admin"],
-      default: "customer",
+      enum: ["CUSTOMER", "VENDOR", "ADMIN"],
+      default: "CUSTOMER",
     },
-    profileImage: {
+    image: {
       type: String,
       default: "",
     },
@@ -72,7 +75,7 @@ const userSchema: Schema<IUser> = new Schema(
         trim: true,
       },
     },
-    phoneNumber: {
+    phone: {
       type: String,
       trim: true,
     },
@@ -84,6 +87,9 @@ const userSchema: Schema<IUser> = new Schema(
       type: [String],
       default: [],
     },
+    stripeCustomerId: {
+      type: String,
+    },
     verifyCode: {
       type: String,
       default: "",
@@ -94,10 +100,14 @@ const userSchema: Schema<IUser> = new Schema(
       default: "",
     },
     forgotPasswordCodeExpiry: Date,
+    status: {
+      type: String,
+      enum: ["ACTIVE", "DISABLE", "DELETE"],
+      default: "ACTIVE",
+    },
   },
   { timestamps: true }
 );
-
 
 const User =
   (mongoose.models.users as mongoose.Model<IUser>) ||

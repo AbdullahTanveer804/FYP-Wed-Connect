@@ -1,12 +1,17 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 import connectDB from "./db/connectDB";
 import User from "@/app/model/userModel";
 import { ERROR_MESSAGES } from "@/constants";
-import bcrypt from "bcryptjs";
+import { verifyPassword } from "@/helpers/authUtils";
 
 export const authOptions: NextAuthOptions = {
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!
+    }),
     CredentialsProvider({
       id: "credentials",
       name: "Credentials",
@@ -17,19 +22,19 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials: any): Promise<any> {
         await connectDB();
         try {
-          const user = await User.findOne({ email: credentials.email });
-          if (!user) {
+          const signUpUser = await User.findOne({ email: credentials.email });
+          if (!signUpUser) {
             throw new Error(ERROR_MESSAGES.USER_NOT_FOUND);
           }
-          if (!user.isVerified) {
+          if (!signUpUser.isVerified) {
             throw new Error(ERROR_MESSAGES.ACCOUNT_NOT_VERIFIED);
           }
-          const isPasswordCorrect = await bcrypt.compare(
+          const isPasswordCorrect = await verifyPassword(
             credentials.password,
-            user.password
+            signUpUser.password
           );
           if (isPasswordCorrect) {
-            return user;
+            return signUpUser;
           } else {
             throw new Error(ERROR_MESSAGES.PASSWORD_MISMATCH);
           }
@@ -40,29 +45,52 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
+    async signIn({user, account}){
+      if (account?.provider === 'google') {
+        try {
+          await connectDB()
+          const existingUser = await User.findOne({email: user.email})
+
+           if (!existingUser) {
+            // Create new user if doesn't exist
+            const newUser = await User.create({
+              email: user.email,
+              name: user.name,
+              isVerified: true, // Google accounts are already verified
+              image: user.image,
+            });
+          }
+          return true;
+        } catch (error) {
+          console.error("Error during Google sign in:", error);
+          throw new Error(ERROR_MESSAGES.INVALID_CREDENTIALS);
+        }
+      }
+      return true
+    },
     async jwt({token, user}){
         if(user){
             token._id = user._id?.toString()
-            token.isVerified = user.isVerified
+            token.email = user.email
+            token.name = user.name
             token.role = user.role
-            token.isActive = user.isActive
-            token.fullName = user.fullName
+            token.isVerified = user.isVerified
         }
         return token
     },
     async session({session, token}){
         if(token){
             session.user._id = token._id
-            session.user.isVerified = token.isVerified
+            session.user.name = token.name
+            session.user.email = token.email
             session.user.role = token.role
-            session.user.isActive = token.isActive
-            session.user.fullName = token.fullName
+            session.user.isVerified = token.isVerified
         }
         return session
     }
   },
   pages: {
-    signIn: '/login'
+    signIn: "/login"
   },
   session: {
     strategy: 'jwt',

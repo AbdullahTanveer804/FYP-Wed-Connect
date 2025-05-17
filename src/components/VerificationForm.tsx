@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/input-otp";
 import { Loader2, Mail } from "lucide-react";
 import { useSearchParams, useRouter, useParams } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { signIn } from "next-auth/react";
 import { toast } from "@/hooks/use-toast";
@@ -26,15 +26,27 @@ export function VerificationForm({ className, ...props }: React.ComponentProps<"
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [otp, setOtp] = useState("");
+  const [countdown, setCountdown] = useState(0);
   
   const email = searchParams.get('email');
   const encryptedPassword = searchParams.get('p');
-  const params = useParams<{fullname: string}>()
-  const fullname = params.fullname
+  
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (countdown > 0) {
+      timer = setInterval(() => {
+        setCountdown((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [countdown]);
   
   const handleVerification = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !encryptedPassword || !fullname) {
+    if (!email || !encryptedPassword) {
       toast({
         title: "Error",
         description: "Missing credentials",
@@ -49,7 +61,7 @@ export function VerificationForm({ className, ...props }: React.ComponentProps<"
       const verifyResponse = await axios.post('/api/verify', {
         email,
         verifyCode: otp,
-        fullname
+      
       });
 
       if (verifyResponse.data.success) {
@@ -84,23 +96,25 @@ export function VerificationForm({ className, ...props }: React.ComponentProps<"
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const handleResendCode = async () => {
+  };  const handleResendCode = async () => {
     if (!email) return;
     
     try {
+      setIsSubmitting(true);
       await axios.post('/api/resend-verification', { email });
       toast({
         title: "Success",
-        description: "Verification code has been resent",
+        description: "A new verification code has been sent to your email",
       });
+      setOtp(""); // Clear the OTP input
     } catch (error: any) {
       toast({
         title: "Failed to resend code",
         description: error.response?.data?.message || "Something went wrong",
         variant: "destructive",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
   
@@ -121,8 +135,7 @@ export function VerificationForm({ className, ...props }: React.ComponentProps<"
               </div>
               
               <div className="flex flex-col items-center gap-4">
-                <Label htmlFor="otp" className="sr-only">Verification Code</Label>
-                <InputOTP 
+                <Label htmlFor="otp" className="sr-only">Verification Code</Label>                <InputOTP 
                   maxLength={6} 
                   value={otp}
                   onChange={(value) => setOtp(value)}
@@ -153,16 +166,25 @@ export function VerificationForm({ className, ...props }: React.ComponentProps<"
                   "Verify Email"
                 )}
               </Button>
-              
-              <div className="text-center text-sm">
+                <div className="text-center text-sm">
                 Didn't receive a code?{" "}
-                <button 
-                  type="button" 
-                  onClick={handleResendCode}
-                  className="text-rose hover:text-rose-dark underline underline-offset-4"
-                >
-                  Resend Code
-                </button>
+                {countdown > 0 ? (
+                  <span className="text-muted-foreground">
+                    Resend code in {countdown}s
+                  </span>
+                ) : (
+                  <button 
+                    type="button" 
+                    onClick={async () => {
+                      await handleResendCode();
+                      setCountdown(60); // Start 60-second countdown for resend button
+                    }}
+                    className="text-rose hover:text-rose-dark underline underline-offset-4"
+                    disabled={isSubmitting}
+                  >
+                    Resend Code
+                  </button>
+                )}
               </div>
               
               <div className="text-center text-sm">

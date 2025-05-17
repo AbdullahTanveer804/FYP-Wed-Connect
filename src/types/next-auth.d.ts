@@ -4,9 +4,9 @@ declare module "next-auth" {
   interface User {
     _id?: string;
     role: string;
+    email: string;
     isVerified: boolean;
-    isActive: boolean;
-    fullName?: string;
+    name?: string;
   }
 }
 declare module "next-auth" {
@@ -14,9 +14,9 @@ declare module "next-auth" {
     user: {
       _id?: string;
       role: string;
+      email: string;
       isVerified: boolean;
-      isActive: boolean;
-      fullName?: string;
+      name?: string;
     } & DefaultSession["user"];
   }
 }
@@ -24,8 +24,8 @@ declare module "next-auth" {
   interface JWT {
     _id?: string;
     role: string;
+    email: string;
     isVerified: boolean;
-    isActive: boolean;
-    fullName?: string;
+    name?: string;
   }
 }

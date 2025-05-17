@@ -1,107 +1,66 @@
+// models/Booking.ts
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IBooking extends Document {
-  customerId: mongoose.Types.ObjectId;
   vendorId: mongoose.Types.ObjectId;
-  eventDetails: {
-    date: Date;
-    startTime: string;
-    endTime: string;
-    location: string;
-    eventType: string;
-    guestCount: number;
-  };
-  services: Array<{
-    name: string;
-    price: number;
-    details?: string;
-  }>;
-  specialRequest?: string;
-  status: "pending" | "confirmed" | "canceled" | "completed";
-  totalAmount: number;
-  depositAmount?: number;
-  depositPaid: boolean;
-  paymentStatus: "unpaid" | "partial" | "paid";
+  vendorName: string;
+  vendorEmail: string;
+  customerId: mongoose.Types.ObjectId;
+  customerName: string;
+  customerEmail: string;
+  listingId: mongoose.Types.ObjectId;
+  serviceTitle: string;
+  date: Date;
+  message?: string;
+  amount: number;
+  status: "PENDING" | "CONFIRMED" | "CANCELED";
+  paymentStatus: "PENDING" | "PAID" | "REFUNDED";
+  paymentIntentId?: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-
-const bookingSchema: Schema<IBooking> = new Schema(
+const BookingSchema = new Schema<IBooking>(
   {
-    customerId: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
     vendorId: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Vendor",
       required: true,
     },
-    eventDetails: {
-      date: {
-        type: Date,
-        required: true,
-      },
-      startTime: {
-        type: String,
-        required: true,
-      },
-      endTime: {
-        type: String,
-        required: true,
-      },
-      location: {
-        type: String,
-        required: true,
-      },
-      eventType: {
-        type: String,
-        required: true,
-      },
-      guestCount: {
-        type: Number,
-        required: true,
-      },
-    },
-    services: [
-      {
-        name: {
-          type: String,
-          requried: true,
-        },
-        price: {
-          type: Number,
-          requried: true,
-        },
-        details: String,
-      },
-    ],
-    specialRequest: String,
+    vendorName: { type: String, required: true },
+    vendorEmail: { type: String, required: true },
+
+    customerId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    customerName: { type: String, required: true },
+    customerEmail: { type: String, required: true },
+
+    listingId: { type: Schema.Types.ObjectId, ref: "Listing", required: true },
+    serviceTitle: { type: String, required: true }, // e.g. “Wedding Photography”
+
+    date: { type: Date, required: true },
+    message: { type: String },
+
+    amount: { type: Number, required: true },
+
     status: {
       type: String,
-      enum: ["pending", "confirmed", "canceled", "completed"],
-      default: "pending",
+      enum: ["PENDING", "CONFIRMED", "CANCELED"],
+      default: "PENDING",
     },
-    totalAmount: {
-      type: Number,
-      required: true,
-    },
-    depositAmount: Number,
-    depositPaid: {
-      type: Boolean,
-      default: false,
-    },
+
     paymentStatus: {
       type: String,
-      enum: ["unpaid", "partial", "paid"],
-      default: "unpaid",
+      enum: ["PENDING", "PAID", "REFUNDED"],
+      default: "PENDING",
     },
+    paymentIntentId: { type: String },
   },
-  { timestamps: true }
+  {
+    timestamps: true, // adds createdAt & updatedAt
+  }
 );
 
-
-const Booking = mongoose.models.bookings as mongoose.Model<IBooking>
-|| mongoose.model<IBooking>('bookings', bookingSchema)
-
-export default Booking
+const Booking =
+  (mongoose.models.bookings as mongoose.Model<IBooking>) ||
+  mongoose.model<IBooking>("bookings", BookingSchema);
+export default Booking;

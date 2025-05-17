@@ -1,0 +1,287 @@
+{"VENDOR": [
+  {
+    "id": 2,
+    "name": "La Fleuriste Enchantée",
+    "category": "Florists",
+    "subCategory": "Wedding Flowers",
+    "location": "Paris, France",
+    "rating": 4.8,
+    "reviews": 87,
+    "images": [
+      "https://images.unsplash.com/photo-1560343090-8c057917ddb9",
+      "https://images.unsplash.com/photo-1517836357463-d494a1297275",
+      "https://images.unsplash.com/photo-1496307389089-536104aec94e"
+    ],
+    "price": "EUR 350.00",
+    "phone": "+33 1 23 45 67 89",
+    "email": "fleurs@enchantee.fr",
+    "website": "https://www.lafleuristeenchantee.fr",
+    "description": "Exquisite floral designs for weddings and events in Paris. We specialize in creating unique bouquets, centerpieces, and venue decorations to make your special day unforgettable.",
+    "expertise": "Bouquets, Centerpieces, Venue Decoration, Floral Arches",
+    "staff": "female",
+    "equipment": {
+      "soundSystem": false,
+      "projector": false,
+      "mic": false
+    },
+    "packages": [
+      {
+        "name": "Romance",
+        "price": "EUR 350.00",
+        "description": "Bridal bouquet, groom's boutonniere, and 2 corsages",
+        "isPopular": true
+      },
+      {
+        "name": "Elegance",
+        "price": "EUR 750.00",
+        "description": "Bridal bouquet, groom's boutonniere, 4 corsages, and 5 table centerpieces",
+        "isPopular": false
+      },
+      {
+        "name": "Grandeur",
+        "price": "EUR 1500.00",
+        "description": "Full floral decoration for ceremony and reception (custom quote)",
+        "isPopular": false
+      }
+    ],
+    "availability": [
+      { "date": "2025-05-20", "available": true },
+      { "date": "2025-05-21", "available": true },
+      { "date": "2025-05-22", "available": false },
+      { "date": "2025-05-23", "available": true }
+    ],
+    "mapLocation": {
+      "lat": "48°51'30.0\"N",
+      "lng": "2°17'40.0\"E",
+      "address": "Champ de Mars, 5 Avenue Anatole France, 75007 Paris, France"
+    }
+  },
+  {
+    "id": 3,
+    "name": "Gourmet Catering Services",
+    "category": "Caterers",
+    "subCategory": "Wedding Catering",
+    "location": "Lyon, France",
+    "rating": 4.7,
+    "reviews": 112,
+    "images": [
+      "https://images.unsplash.com/photo-1565299624946-b28f40a0e30b",
+      "https://images.unsplash.com/photo-1484980972926-edee96e0960d",
+      "https://images.unsplash.com/photo-1555122757-59285741833b"
+    ],
+    "price": "EUR 45.00 per person",
+    "phone": "+33 4 78 90 12 34",
+    "email": "info@gourmetcatering.fr",
+    "website": "https://www.gourmetcatering.fr",
+    "description": "Exceptional catering services for weddings and events in Lyon. We offer a wide range of menus tailored to your taste and dietary requirements.",
+    "expertise": "Buffets, Plated Meals, Dessert Stations, Beverage Services",
+    "staff": "mixed",
+    "equipment": {
+      "soundSystem": false,
+      "projector": false,
+      "mic": false
+    },
+    "packages": [
+      {
+        "name": "Classic",
+        "price": "EUR 45.00",
+        "description": "Three-course meal with choice of main course",
+        "isPopular": true
+      },
+      {
+        "name": "Deluxe",
+        "price": "EUR 65.00",
+        "description": "Four-course meal with premium selections and appetizers",
+        "isPopular": false
+      },
+      {
+        "name": "Custom",
+        "price": "Upon request",
+        "description": "Tailored menu to your specific needs",
+        "isPopular": false
+      }
+    ],
+    "availability": [
+      { "date": "2025-05-25", "available": true },
+      { "date": "2025-05-26", "available": false },
+      { "date": "2025-05-27", "available": true },
+      { "date": "2025-05-28", "available": true }
+    ],
+    "mapLocation": {
+      "lat": "45°45'30.0\"N",
+      "lng": "4°50'00.0\"E",
+      "address": "9 Quai du Commerce, 69009 Lyon, France"
+    }
+  },
+  {
+    "id": 4,
+    "name": "Studio Lumière Photography",
+    "category": "Photographers",
+    "subCategory": "Wedding Photography",
+    "location": "Marseille, France",
+    "rating": 4.9,
+    "reviews": 95,
+    "images": [
+      "https://images.unsplash.com/photo-1502685106911-02285547d18a",
+      "https://images.unsplash.com/photo-1492557363874-741f4334388a",
+      "https://images.unsplash.com/photo-1503344777860-582f1983b1c5"
+    ],
+    "price": "EUR 1800.00",
+    "phone": "+33 6 54 32 10 98",
+    "email": "photos@studiolumiere.fr",
+    "website": "https://www.studiolumiere.fr",
+    "description": "Professional wedding photography services in Marseille, capturing your special moments with artistry and care.",
+    "expertise": "Candid Photography, Portrait Sessions, Album Design",
+    "staff": "male",
+    "equipment": {
+      "soundSystem": false,
+      "projector": false,
+      "mic": false
+    },
+    "packages": [
+      {
+        "name": "Silver",
+        "price": "EUR 1800.00",
+        "description": "6 hours of coverage, digital images",
+        "isPopular": true
+      },
+      {
+        "name": "Gold",
+        "price": "EUR 2500.00",
+        "description": "8 hours of coverage, digital images, and a photo album",
+        "isPopular": false
+      },
+      {
+        "name": "Platinum",
+        "price": "EUR 3200.00",
+        "description": "Full day coverage, digital images, photo album, and pre-wedding shoot",
+        "isPopular": false
+      }
+    ],
+    "availability": [
+      { "date": "2025-05-19", "available": true },
+      { "date": "2025-05-20", "available": false },
+      { "date": "2025-05-21", "available": true },
+      { "date": "2025-05-22", "available": true }
+    ],
+    "mapLocation": {
+      "lat": "43°17'47.0\"N",
+      "lng": "5°22'12.0\"E",
+      "address": "Vieux-Port de Marseille, 13001 Marseille, France"
+    }
+  },
+  {
+    "id": 5,
+    "name": "Makeup by Léa",
+    "category": "Beauty & Spas",
+    "subCategory": "Wedding Makeup Artist",
+    "location": "Nice, France",
+    "rating": 4.8,
+    "reviews": 78,
+    "images": [
+      "https://images.unsplash.com/photo-1519327232517-29c84967022e",
+      "https://images.unsplash.com/photo-1591085480847-e5775a9911fa",
+      "https://images.unsplash.com/photo-1544005279-fe1955137454"
+    ],
+    "price": "EUR 200.00",
+    "phone": "+33 7 65 43 21 09",
+    "email": "lea.makeup@email.fr",
+    "website": "https://www.makeupbylea.fr",
+    "description": "Professional makeup artist specializing in bridal looks in Nice. Creating flawless and radiant makeup for your special day.",
+    "expertise": "Bridal Makeup, Hairstyling, Trial Sessions",
+    "staff": "female",
+    "equipment": {
+      "soundSystem": false,
+      "projector": false,
+      "mic": false
+    },
+    "packages": [
+      {
+        "name": "Bridal Makeup",
+        "price": "EUR 200.00",
+        "description": "Includes consultation and application on the wedding day",
+        "isPopular": true
+      },
+      {
+        "name": "Bridal Hair & Makeup",
+        "price": "EUR 350.00",
+        "description": "Includes hairstyling and makeup application",
+        "isPopular": false
+      },
+      {
+        "name": "Bridesmaid Package",
+        "price": "EUR 150.00 per person",
+        "description": "Makeup application for bridesmaids",
+        "isPopular": false
+      }
+    ],
+    "availability": [
+      { "date": "2025-05-23", "available": true },
+      { "date": "2025-05-24", "available": false },
+      { "date": "2025-05-25", "available": true },
+      { "date": "2025-05-26", "available": true }
+    ],
+    "mapLocation": {
+      "lat": "43°42'15.0\"N",
+      "lng": "7°16'09.0\"E",
+      "address": "Promenade des Anglais, 06000 Nice, France"
+    }
+  },
+  {
+    "id": 6,
+    "name": "Elegant Events Planning",
+    "category": "Event Planner",
+    "subCategory": "Wedding Planner",
+    "location": "Bordeaux, France",
+    "rating": 4.9,
+    "reviews": 105,
+    "images": [
+      "https://images.unsplash.com/photo-1523050854058-8df901151109",
+      "https://images.unsplash.com/photo-1551882544-6d996b575569",
+      "https://images.unsplash.com/photo-1587300003388-cc4978999f78"
+    ],
+    "price": "EUR 2500.00",
+    "phone": "+33 5 56 78 90 12",
+    "email": "info@elegantevents.fr",
+    "website": "https://www.elegantevents.fr",
+    "description": "Full-service wedding planning in Bordeaux. We handle every detail to ensure a stress-free and memorable celebration.",
+    "expertise": "Venue Selection, Vendor Coordination, Budget Management, Day-of Coordination",
+    "staff": "mixed",
+    "equipment": {
+      "soundSystem": false,
+      "projector": false,
+      "mic": false
+    },
+    "packages": [
+      {
+        "name": "Partial Planning",
+        "price": "EUR 2500.00",
+        "description": "Assistance with vendor selection and coordination",
+        "isPopular": false
+      },
+      {
+        "name": "Full Planning",
+        "price": "EUR 4500.00",
+        "description": "Comprehensive planning from start to finish",
+        "isPopular": true
+      },
+      {
+        "name": "Day-of Coordination",
+        "price": "EUR 1000.00",
+        "description": "On-site management on the wedding day",
+        "isPopular": false
+      }
+    ],
+    "availability": [
+      { "date": "2025-05-28", "available": true },
+      { "date": "2025-05-29", "available": true },
+      { "date": "2025-05-30", "available": false },
+      { "date": "2025-05-31", "available": true }
+    ],
+    "mapLocation": {
+      "lat": "44°50'16.0\"N",
+      "lng": "-0°34'46.0\"W",
+      "address": "Place de la Bourse, 33000 Bordeaux, France"
+    }
+  }
+]}

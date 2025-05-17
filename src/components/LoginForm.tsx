@@ -48,7 +48,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
           variant: "destructive",
         });
       } else {
-        router.replace("/dashboard");
+        router.replace("/");
       }
     } catch (error) {
       toast({
@@ -200,6 +200,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
 
               <div className="flex justify-center">
                 <Button
+                onClick={() => signIn('google', {callbackUrl: '/'})}
                   variant="outline"
                   className="w-full max-w-xs border-gray-dark hover:bg-gray-light flex items-center gap-2"
                 >

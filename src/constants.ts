@@ -24,9 +24,9 @@ export const ERROR_MESSAGES = {
     MISSING_FIELDS: "Required fields are missing",
     DATABASE_CONNECTION_FAILED: "Failed to connect to the database",
     ACTION_FAILED: "Action could not be completed",
-    RATE_LIMITED: "Too many requests. Please try again later",
-    TOKEN_EXPIRED: "Verification token has expired",
-    EMAIL_VERIFICATION: 'Error sending verification email'
+    RATE_LIMITED: "Too many requests. Please try again later",    TOKEN_EXPIRED: "Verification code has expired. Click resend to get a new code",
+    EMAIL_VERIFICATION: 'Error sending verification email',
+    ACCOUNT_ALREADY_VERIFIED: 'This account is already verified'
   };
 
   
@@ -40,7 +40,7 @@ export const ERROR_MESSAGES = {
     PASSWORD_UPDATED: "Password has been updated successfully",
     EMAIL_UPDATED: "Email has been updated successfully",
     USERNAME_UPDATED: "Username has been updated successfully",
-    REFRESHTOKEN_UPDATED: "Refresh Token has been updated successfully",
+    REFRESH_TOKEN_UPDATED: "Refresh Token has been updated successfully",
     CURRENT_USER: "User has been updated successfully",
     USER_LOGOUT: "User logged out successfully",
     DELETE_USER: "User account has been deleted successfully",

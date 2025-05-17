@@ -1,13 +1,13 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-export interface ICoversation extends Document {
+export interface IConversation extends Document {
   members: Array<mongoose.Types.ObjectId>;
   lastMessage?: mongoose.Types.ObjectId;
   bookingId?: mongoose.Types.ObjectId;
   unReadCount: { [key: string]: number };
 }
 
-const conversationSchema: Schema<ICoversation> = new Schema(
+const conversationSchema: Schema<IConversation> = new Schema(
   {
     members: [
       {
@@ -34,7 +34,7 @@ const conversationSchema: Schema<ICoversation> = new Schema(
 );
 
 
-const Conversation = mongoose.models.conversations as mongoose.Model<ICoversation> || 
-mongoose.model<ICoversation>('conversations', conversationSchema)
+const Conversation = mongoose.models.conversations as mongoose.Model<IConversation> || 
+mongoose.model<IConversation>('conversations', conversationSchema)
 
 export default Conversation

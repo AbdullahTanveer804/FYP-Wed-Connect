@@ -15,6 +15,7 @@ import * as z from "zod";
 import axios, { AxiosError } from "axios";
 import { IApiResponse } from "@/types/ApiResponse";
 import { toast } from "@/hooks/use-toast";
+import { signIn } from "next-auth/react";
 
 // Add this helper function at the top of the file, outside the component
 const encryptData = (text: string) => {
@@ -37,7 +38,7 @@ export function SignupForm({
   } = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
-      fullname: "",
+      name: "",
       email: "",
       password: "",
     },
@@ -58,9 +59,8 @@ export function SignupForm({
       const encryptedPassword = encryptData(data.password);
 
       setTimeout(() => {
-        const fullname = data.fullname
         router.replace(
-          `/verify/${fullname}?` +
+          `/verify?` +
           new URLSearchParams({
             email: data.email,
             p: encryptedPassword // 'p' instead of 'password' to be less obvious
@@ -98,16 +98,16 @@ export function SignupForm({
               <div className="grid gap-2">
                 <Label htmlFor="name">Full Name</Label>
                 <Input
-                  {...register("fullname")}
+                  {...register("name")}
                   id="name"
                   type="text"
                   placeholder="John Doe"
                   required
                   className="focus-visible:ring-rose"
                 />
-                {errors.fullname && (
+                {errors.name && (
                   <p className="text-red-500 text-sm mt-1">
-                    {errors.fullname.message}
+                    {errors.name.message}
                   </p>
                 )}
               </div>
@@ -175,6 +175,7 @@ export function SignupForm({
 
               <div className="flex justify-center">
                 <Button //change icon
+                onClick={() => signIn('google', {callbackUrl: '/'})}
                   variant="outline"
                   className="w-full max-w-xs border-gray-dark hover:bg-gray-light flex items-center gap-2"
                 >
