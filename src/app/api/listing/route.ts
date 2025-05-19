@@ -30,15 +30,17 @@ export async function GET(req: NextRequest) {
       query["pricing.minPrice"] = {};
       if (minPrice) query["pricing.minPrice"].$gte = parseInt(minPrice);
       if (maxPrice) query["pricing.minPrice"].$lte = parseInt(maxPrice);
-    }
-
-    const skip = (page - 1) * limit;
+    }    const skip = (page - 1) * limit;
     const listings = await Listing.find(query)
       .sort({ featured: -1, createdAt: -1 })
       .skip(skip)
       .limit(limit);
 
     const total = await Listing.countDocuments(query);
+
+    if (total === 0) {
+      console.log(`No listings found${category ? ` for category: ${category}` : ''}${city ? ` in city: ${city}` : ''}`);
+    }
 
     return NextResponse.json({
       listings,

@@ -21,19 +21,21 @@ export const HeroSection = () => {
               Connect with top wedding vendors, plan your perfect day, and create memories that last a lifetime.
             </p>
             <div className="flex flex-wrap gap-4">
-              <Button size="lg" className="bg-rose hover:bg-rose-dark text-white">
-                Find Vendors
-              </Button>
-              <Button size="lg" variant="outline" className="border-rose text-rose hover:bg-rose/10">
-                Plan My Wedding
-              </Button>
+                <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="border-rose text-rose hover:bg-rose/10"
+                >
+                <a href="/vendors">Find Vendors</a>
+                </Button>
             </div>
           </div>
           <div className="w-full md:w-1/2 mt-12 md:mt-0 animate-fade-in" style={{ animationDelay: "0.4s" }}>
             <div className="relative">
               <div className="absolute -top-4 -left-4 w-full h-full border-2 border-rose rounded-lg"></div>
               <img 
-                src="https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07" 
+                src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
                 alt="Wedding celebration" 
                 className="w-full h-auto rounded-lg shadow-lg object-cover"
                 style={{ maxHeight: "500px" }}

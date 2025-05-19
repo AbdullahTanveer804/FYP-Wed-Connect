@@ -1,4 +1,4 @@
-import { AIRecommendation } from '@/components/landing/AIRecommendation'
+import { AIRecommendationSection } from '@/components/landing/AIRecommendationSection'
 import { BecomeVendor } from '@/components/landing/BecomeVendor'
 import { HeroSection } from '@/components/landing/HeroSection'
 import { Testimonials } from '@/components/landing/Testimonials'
@@ -12,7 +12,7 @@ const landingPage : NextPage = () => {
     <div className="flex flex-col min-h-screen">
     <HeroSection />
     <VendorCategories />
-    <AIRecommendation />
+    <AIRecommendationSection />
     <TopVendors />
     <Testimonials />
     <BecomeVendor />

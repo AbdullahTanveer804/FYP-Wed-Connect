@@ -5,7 +5,7 @@ export interface ICategory extends Document {
   createdBy: mongoose.Types.ObjectId;
 }
 
-const messageSchema: Schema<ICategory> = new Schema(
+const categorySchema: Schema<ICategory> = new Schema(
   {
     name: {
       type: String,
@@ -20,8 +20,6 @@ const messageSchema: Schema<ICategory> = new Schema(
   { timestamps: true }
 );
 
-const Category =
-  (mongoose.models.messages as mongoose.Model<ICategory>) ||
-  mongoose.model<ICategory>("categories", messageSchema);
+const Category = mongoose.models.categories || mongoose.model("categories", categorySchema);
 
-export default Category;
+export default Category as mongoose.Model<ICategory>;

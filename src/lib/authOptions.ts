@@ -67,15 +67,47 @@ export const authOptions: NextAuthOptions = {
         }
       }
       return true
-    },
-    async jwt({token, user}){
+    },    async jwt({token, user}){
         if(user){
+            // Initial sign in
             token._id = user._id?.toString()
             token.email = user.email
             token.name = user.name
             token.role = user.role
             token.isVerified = user.isVerified
+            token.picture = user.image
+        }        // On subsequent requests, fetch fresh user data to check for updates
+        try {
+            await connectDB();
+            const currentUser = await User.findOne({ email: token.email });
+            if (currentUser) {
+                // Update all user fields in token to stay in sync with database
+                const fieldsToUpdate = {
+                    name: currentUser.name,
+                    email: currentUser.email,
+                    role: currentUser.role,
+                    isVerified: currentUser.isVerified,
+                    picture: currentUser.image,
+                };
+
+                let hasChanges = false;
+                for (const [key, value] of Object.entries(fieldsToUpdate)) {
+                    const tokenKey = key === 'picture' ? 'picture' : key;
+                    if (token[tokenKey] !== value) {
+                        console.log(`User ${key} changed, updating token:`, value);
+                        token[tokenKey] = value;
+                        hasChanges = true;
+                    }
+                }
+
+                if (hasChanges) {
+                    console.log('Token updated with latest user data');
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching updated user data:', error);
         }
+
         return token
     },
     async session({session, token}){
@@ -85,6 +117,7 @@ export const authOptions: NextAuthOptions = {
             session.user.email = token.email
             session.user.role = token.role
             session.user.isVerified = token.isVerified
+            session.user.image = token.picture
         }
         return session
     }

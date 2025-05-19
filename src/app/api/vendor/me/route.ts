@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    return NextResponse.json(vendor);
+    return NextResponse.json({ vendor });
   } catch (error) {
     console.error("Error fetching vendor profile:", error);
     return NextResponse.json(

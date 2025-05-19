@@ -1,39 +1,72 @@
-import { Camera, Utensils, Home, MapPin } from "lucide-react";
+"use client";
+import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import Link from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
-const categories = [
-  {
-    id: "photography",
-    name: "Photography",
-    description: "Capture your special moments",
-    icon: <Camera className="h-8 w-8 text-rose" />,
-    route: "/categories/photography"
-  },
-  {
-    id: "catering",
-    name: "Catering",
-    description: "Delicious dining experiences",
-    icon: <Utensils className="h-8 w-8 text-rose" />,
-    route: "/categories/catering"
-  },
-  {
-    id: "venues",
-    name: "Venues",
-    description: "Perfect spaces for your event",
-    icon: <Home className="h-8 w-8 text-rose" />,
-    route: "/categories/venues"
-  },
-  {
-    id: "decorations",
-    name: "Decorations",
-    description: "Beautiful wedding setups",
-    icon: <MapPin className="h-8 w-8 text-rose" />,
-    route: "/categories/decorations"
-  }
+// Dummy data for fallback
+const dummyCategories = [
+  { _id: "1", name: "Book Hall" },
+  { _id: "2", name: "Catering" },
+  { _id: "3", name: "Photographer" },
+  { _id: "4", name: "Makeup Artist" },
+  { _id: "5", name: "Decor" },
+  { _id: "6", name: "Musician" },
+  { _id: "7", name: "Mehndi Artist" }
 ];
 
+interface Category {
+  _id: string;
+  name: string;
+}
+
+const defaultCategoryIcons: { [key: string]: string } = {
+  'book hall': '/icons/hall.svg',
+  'catering': '/icons/catering.svg',
+  'photographer': '/icons/photographer.svg',
+  'makeup artist': '/icons/makeup.svg',
+  'decor': '/icons/decor.svg',
+  'musician': '/icons/musician.svg',
+  'mehndi artist': '/icons/mehndi.svg',
+};
+
 export const VendorCategories = () => {
+  const [categories, setCategories] = useState<Category[]>([]);
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('/api/category');
+        const data = await response.json();
+        
+        // If no categories found in database, use dummy data
+        if (!data || data.length === 0) {
+          setCategories(dummyCategories);
+        } else {
+          setCategories(data);
+        }
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+        // Fallback to dummy data on error
+        setCategories(dummyCategories);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  const handleCategoryClick = async (categoryId: string) => {
+    try {
+      // Fetch listings for the selected category
+      await fetch(`/api/listing?categoryId=${categoryId}`);      
+      // Navigate to the listings page with the results
+      router.push(`/vendors?category=${categoryId}`);
+    } catch (error) {
+      console.error('Error fetching listings:', error);
+    }
+  };
+
   return (
     <section className="py-16 bg-gray">
       <div className="container mx-auto px-4">
@@ -44,25 +77,35 @@ export const VendorCategories = () => {
           </p>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {categories.map((category, index) => (
-            <Link 
-              href={category.route} 
-              key={category.id}
-              className="block h-full"
-            >
-              <Card className="h-full transition-all duration-300 hover:shadow-lg hover:translate-y-[-5px] animate-fade-in" 
-                style={{ animationDelay: `${0.2 + index * 0.1}s` }}>
-                <CardContent className="p-6 flex flex-col items-center text-center">
-                  <div className="mb-4 p-3 bg-rose/10 rounded-full">
-                    {category.icon}
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2">{category.name}</h3>
-                  <p className="text-gray-600">{category.description}</p>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-4">
+          {categories.map((category, index) => {
+            const normalizedCategoryName = category.name.toLowerCase();
+            const iconPath = defaultCategoryIcons[normalizedCategoryName] || '/icons/default.svg';
+            
+            return (
+              <div 
+                key={category._id}
+                className="cursor-pointer"
+                onClick={() => handleCategoryClick(category._id)}
+              >
+                <Card className="h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1 animate-fade-in" 
+                  style={{ animationDelay: `${0.1 + index * 0.05}s` }}>
+                  <CardContent className="p-4 flex flex-col items-center text-center">
+                    <div className="w-16 h-16 mb-3 bg-rose/10 rounded-full p-3">
+                      <Image
+                        src={iconPath}
+                        alt={category.name}
+                        width={64}
+                        height={64}
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                    <h3 className="text-sm font-medium">{category.name}</h3>
+                  </CardContent>
+                </Card>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

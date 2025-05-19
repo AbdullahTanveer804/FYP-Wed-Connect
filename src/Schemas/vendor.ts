@@ -36,3 +36,5 @@ export const vendorProfileSchema = z.object({
 });
 
 export const vendorUpdateSchema = vendorProfileSchema.partial(); // All fields now optional
+
+export type VendorProfile = z.infer<typeof vendorProfileSchema>;

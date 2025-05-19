@@ -43,18 +43,19 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const newVendor = await Vendor.create({
+    const newVendor = (await Vendor.create({
       vendorId: userId,
       ...validatedData,
       memberSince: new Date(),
       rating: { average: 0, totalReviews: 0 },
       isVerified: false,
       featured: false,
-    }) as mongoose.Document & { _id: mongoose.Types.ObjectId };
+    })) as mongoose.Document & { _id: mongoose.Types.ObjectId };
 
     // Update user role to VENDOR
     user.role = "VENDOR";
     await user.save();
+    console.log("Newly saved Vendor: ", newVendor);
 
     // Send verification email to admin
     await sendVendorVerificationEmail(
@@ -63,11 +64,12 @@ export async function POST(req: NextRequest) {
       validatedData.businessName,
       newVendor._id.toString()
     );
+    console.log("Email for vendor verification is successfully sent to admin");
 
     return NextResponse.json(
       {
+        success: true,
         message: "Vendor profile created and pending verification",
-        vendor: newVendor,
       },
       { status: 201 }
     );
@@ -78,7 +80,10 @@ export async function POST(req: NextRequest) {
 
     console.error("Error creating vendor profile:", error);
     return NextResponse.json(
-      { error: "Failed to create vendor profile" },
+      {
+        success: false,
+        error: "Failed to create vendor profile",
+      },
       { status: 500 }
     );
   }

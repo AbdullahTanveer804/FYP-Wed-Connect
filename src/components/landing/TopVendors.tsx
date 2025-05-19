@@ -44,28 +44,21 @@ export const TopVendors = () => {
   const filteredVendors = vendors.filter(vendor => vendor.location === selectedCity);
   
   return (
-    <section className="py-16 bg-gray-light">
+    <section className="py-16 relative bg-rose-light overflow-hidden">
+      {/* Background decoration */} 
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-gray/30 rounded-bl-full transform translate-x-1/4 -translate-y-1/4"></div>
+        <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-rose/20 rounded-tr-full transform -translate-x-1/4 translate-y-1/4"></div>
+      </div>
       <div className="container mx-auto px-4">
         <div className="text-center mb-8 animate-fade-in">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Top Vendors Near You</h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Top Vendors</h2>
+          <p className="text-white max-w-2xl mx-auto">
             Discover highly-rated wedding professionals in your area
           </p>
         </div>
         
-        {/* City selector */}
-        <div className="flex flex-wrap justify-center gap-2 mb-10 animate-fade-in" style={{ animationDelay: "0.2s" }}>
-          {cities.map(city => (
-            <Button
-              key={city}
-              variant={selectedCity === city ? "default" : "outline"}
-              className={`mb-2 ${selectedCity === city ? 'bg-rose hover:bg-rose-dark' : 'border-rose text-rose hover:bg-rose/10'}`}
-              onClick={() => setSelectedCity(city)}
-            >
-              {city}
-            </Button>
-          ))}
-        </div>
+
         
         {/* Vendor cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -101,7 +94,7 @@ export const TopVendors = () => {
         
         <div className="text-center mt-10 animate-fade-in" style={{ animationDelay: "0.5s" }}>
           <Button variant="outline" className="border-rose text-rose hover:bg-rose/10">
-            View All Vendors in {selectedCity}
+            View All Vendors
           </Button>
         </div>
       </div>
